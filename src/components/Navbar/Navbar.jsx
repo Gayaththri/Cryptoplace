@@ -18,7 +18,7 @@ const Navbar = () => {
         break;
       }
       case "lkr": {
-        setCurrency({ name: "lkr", symbol: "Rs" });
+        setCurrency({ name: "lkr", symbol: "Rs." });
         break;
       }
       default: {
@@ -40,7 +40,7 @@ const Navbar = () => {
       <div className="nav-right">
         <select onChange={currencyHandler}>
           <option value="usd">USD</option>
-          <option value="euro">EUR</option>
+          <option value="eur">EUR</option>
           <option value="lkr">LKR</option>
         </select>
         <button>
