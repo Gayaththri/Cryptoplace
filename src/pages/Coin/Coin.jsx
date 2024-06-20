@@ -6,41 +6,55 @@ import LineChart from "../../components/LineChart/LineChart";
 
 const Coin = () => {
   const { coinId } = useParams();
-  const [coinData, setCoinData] = useState();
-  const [historicalData, setHistoricalData] = useState();
+  const [coinData, setCoinData] = useState(null);
+  const [historicalData, setHistoricalData] = useState(null);
   const { currency } = useContext(CoinContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchCoinData = async () => {
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "x-cg-demo-api-key": "CG-Fh7VgWtqTwFk8QgUD8xanjk1",
-      },
-    };
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "x-cg-demo-api-key": "CG-Fh7VgWtqTwFk8QgUD8xanjk1", //Consider storing this securely
+        },
+      };
 
-    fetch(`https://api.coingecko.com/api/v3/coins/${coinId}`, options)
-      .then((response) => response.json())
-      .then((response) => setCoinData(response))
-      .catch((err) => console.error(err));
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/coins/${coinId}`,
+        options
+      );
+      const data = await response.json();
+      setCoinData(data);
+    } catch (err) {
+      console.error(err);
+      // Handle errors, maybe display a user-friendly message
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const fetchHistoricalData = async () => {
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "x-cg-demo-api-key": "CG-Fh7VgWtqTwFk8QgUD8xanjk1",
-      },
-    };
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "x-cg-demo-api-key": "CG-Fh7VgWtqTwFk8QgUD8xanjk1",
+        },
+      };
 
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency.name}&days=10&interval=daily`,
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => setHistoricalData(response))
-      .catch((err) => console.error(err));
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency.name}&days=10&interval=daily`,
+        options
+      );
+      const data = await response.json();
+      setHistoricalData(data);
+    } catch (err) {
+      console.error(err);
+      // Handle errors here
+    }
   };
 
   useEffect(() => {
@@ -48,12 +62,19 @@ const Coin = () => {
     fetchHistoricalData();
   }, [currency]);
 
-  if (coinData, historicalData) {
+  if (isLoading) {
+    return (
+      <div className="spinner">
+        <div className="spin"></div>
+      </div>
+    );
+  } else if (coinData && historicalData) {
     return (
       <div className="coin">
         <div className="coin-name">
-          <img src={coinData.image.large} alt="" />
+          <img src={coinData.image.large} alt="Loading" />
           <p>
+            {" "}
             <b>
               {coinData.name} ({coinData.symbol.toUpperCase()})
             </b>

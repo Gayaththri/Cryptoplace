@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import Chart from "react-google-charts";
 
 const LineChart = ({ historicalData }) => {
@@ -16,7 +17,16 @@ const LineChart = ({ historicalData }) => {
       setData(dataCopy);
     }
   }, [historicalData]);
+
   return <Chart chartType="LineChart" data={data} height="100%" legendToggle />;
+};
+
+LineChart.propTypes = {
+  historicalData: PropTypes.shape({
+    prices: PropTypes.arrayOf(
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]))
+    ).isRequired,
+  }).isRequired,
 };
 
 export default LineChart;

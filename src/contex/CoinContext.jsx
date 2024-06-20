@@ -31,10 +31,8 @@ const CoinContextProvider = (props) => {
     fetchAllCoin();
   }, [currency]);
 
-  const contextValue = {
-    allCoin,
-    currency,
-    setCurrency,
+    const contextValue = {
+      allCoin, currency, setCurrency
   };
 
   return (
